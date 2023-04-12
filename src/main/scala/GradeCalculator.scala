@@ -67,4 +67,7 @@ class GradeCalculator {
   } yield classAverage).recover {
       case ex => throw new Exception(s"Error calculating grades: ${ex.getMessage}")
   }
+
+}
+
 }
