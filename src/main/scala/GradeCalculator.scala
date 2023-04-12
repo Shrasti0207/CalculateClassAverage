@@ -60,12 +60,11 @@ class GradeCalculator {
   }
 
   // A method to calculate the overall class average for a CSV file at the given path, and return a Future of the class average
-  def calculateGrades(path: String): Future[Double] = {
-    val parsedData = parseCsv(path)
-    val studentAverages = calculateStudentAverages(parsedData)
-    val classAverage = calculateClassAverage(studentAverages)
-    classAverage.recover {
+  def calculateGrades(path: String): Future[Double] = (for {
+    parsedData <- parseCsv(path)
+    studentAverages <- calculateStudentAverages(Future(parsedData))
+    classAverage <- calculateClassAverage(Future(studentAverages))
+  } yield classAverage).recover {
       case ex => throw new Exception(s"Error calculating grades: ${ex.getMessage}")
     }
-  }
 }
